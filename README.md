@@ -209,6 +209,8 @@ const child = spawn(binary, [join(HERE, 'overlay', 'main.cjs')], {
 
 仓库内其余 `.exec` 出现处均为正则匹配（`/^mcp__.*?__/`、`/:(\d+)/`），与命令执行无关。
 
+0.5.1 起不再调用 `process.kill`、也不再 `unlink` 任何文件：覆盖层存活判定用**心跳文件**（覆盖层每 2 秒写 `overlay.status.json` 的 `beat`；宿主每 5 秒写 `host.heartbeat`），退出用**请求式**（宿主写 `shutdown.json`，覆盖层自行 `app.quit()`）；pid 文件清空是写入空串而不是删除。
+
 **网络与数据**：无遥测、无外部请求；HTTP 路由（`/screen-glow/settings`、`/screen-glow/preview`、`/screen-glow/hide`）只注册在宿主 webServer 的本机监听地址上，用于同源的设置页读写。覆盖层只读本地 `state.json`（布尔值 + 工具名 + 几个数字）。
 
 ## 隐私

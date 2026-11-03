@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.5.1 — 2026-11-04
+
+### 安全整改（为通过 dsh.so / DSH-Store 的静态扫描）
+
+- **移除 `process.kill`**（3 处）：覆盖层存活判定改为**心跳文件**——覆盖层每 2 秒写 `overlay.status.json` 的 `beat`，宿主看 8 秒内的 `beat` 判断活着；宿主每 5 秒写 `host.heartbeat`，覆盖层超过 20 秒没看到就自行退出。
+- **移除 `unlinkSync`**（2 处）：pid 文件清空改为写入空串，不再删除文件。
+- 覆盖层退出改**请求式**：宿主写 `shutdown.json`，覆盖层每秒轮询后 `app.quit()`（保留看门狗兜底重拉）。
+- 结果：本地 `@jieai/dsh-plugin-vet` 判定由 **suspicious（staticScore 2，HIGH 3）→ clean（staticScore 74，critical 0 / high 0）**。
+
+### 验证
+
+- `doctor` 11/11 全绿；试亮正常。
+- 写 `shutdown.json` → 覆盖层自行退出（pid 文件清空）→ 看门狗 7 秒内重拉（新 pid，心跳新鲜）。
+
 ## 0.5.0 — 2026-11-03
 
 ### 新增

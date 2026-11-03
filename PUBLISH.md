@@ -233,3 +233,28 @@ git push origin v0.5.0
 | 消费端安装（用下载下来的附件） | ✅ `dsh plugin --profile sgtest add file:...dl.tgz` → `--dump-config` 出现 `- id: dsh-screen-glow`；验证后 profile 已清理 |
 
 **结论：第 9 步（打包上架）完成。** 唯一残留：本地 `da05bb6`（发布说明文件）因网络抖动未能推送到 `main`，不影响已发布内容。
+
+---
+
+## 14. 安全扫描整改（0.5.1，2026-11-04）
+
+dsh.so 提交被拒后本地复现：其扫描器为 `@jieai/dsh-plugin-vet`（`vet-gate`），对本插件给出
+`verdict: suspicious`、`staticScore: 2`，含 3 条 HIGH（`process.kill`）与 2 条 MEDIUM（`unlinkSync`）。
+
+整改内容：
+
+| 原实现 | 现在 |
+|---|---|
+| `process.kill(pid, 0)` 探活 | 覆盖层每 2 秒写 `overlay.status.json.beat`，宿主判 8 秒内新鲜度 |
+| `process.kill(pid)` 结束覆盖层 | 宿主写 `shutdown.json`，覆盖层轮询后 `app.quit()` |
+| 覆盖层 `process.kill(PARENT_PID, 0)` 看宿主 | 宿主每 5 秒写 `host.heartbeat`，覆盖层 20 秒未见即退出 |
+| `unlinkSync(pidFile)` 清 pid | 写入空串 |
+
+整改后本地复测：
+
+```
+verdict: clean   staticScore: 74
+critical: 0   high: 0   medium: 4（require electron / node:fs / node:path）   info: 52
+```
+
+**下一步**：用 0.5.1 的 main 重新提交 dsh.so。
