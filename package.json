@@ -1,6 +1,6 @@
 {
   "name": "dsh-screen-glow",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "屏幕边缘光：模型接管鼠标键盘时主屏四边亮蓝光+粒子、问你问题时琥珀、等你批准时红色，并在屏幕中上方浮一行“正在做什么”；含设置页、看门狗与自检 CLI。",
   "type": "module",
   "main": "lib/index.js",

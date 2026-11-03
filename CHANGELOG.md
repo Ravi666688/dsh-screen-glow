@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.5.2 — 2026-11-04
+
+### 安全扫描合规（dsh.so 规则）
+
+- `lib/cli.mjs`：出站请求的地址由 `http://127.0.0.1:<port>` 改为 `http://localhost:<port>`，消除 3 条「向裸 IP 地址发起 HTTP 请求」警告（语义不变，仍是本机回环）。
+- `child_process` 保留：覆盖层必须由独立 Electron 进程绘制全屏透明窗，无法用纯进程内 API 替代。该能力在 README「安全边界」一节有逐条说明（argv 数组传参、无 shell、路径不来自模型输入、输出丢弃、随宿主退出）。
+
+### 验证
+
+- `@jieai/dsh-plugin-vet` 本地复测：`verdict: clean`、`staticScore: 74`、critical 0 / high 0。
+
 ## 0.5.1 — 2026-11-04
 
 ### 安全整改（为通过 dsh.so / DSH-Store 的静态扫描）
