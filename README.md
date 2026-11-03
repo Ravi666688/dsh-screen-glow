@@ -183,6 +183,34 @@ DSH **设置 → 屏幕边缘光**：操控色 / 询问色两套（各 6 个预�
 | 透明窗发黑/花屏 | 设 `DSH_SCREEN_GLOW_SOFTWARE=1` 走软件合成重开 |
 | 想看状态 | `cat "$DSH_HOME/screen-glow/state.json"`；`overlay.pid` 是覆盖层进程 |
 
+## 安全边界（静态扫描说明）
+
+扫描器通常会报一条 `child-process` 警告。这里说明它具体做什么，以及它**不能**做什么。
+
+**唯一的子进程调用**在 `lib/index.js`：
+
+```js
+const child = spawn(binary, [join(HERE, 'overlay', 'main.cjs')], {
+  detached: true,
+  stdio: 'ignore',
+  windowsHide: true,
+  env,
+})
+```
+
+| 约束 | 说明 |
+|---|---|
+| 不使用 shell | 没有 `shell: true`，也不是 `exec/execSync` 拼字符串；参数以 argv 数组传递，不存在命令注入面 |
+| 二进制来源 | 本机配置 `overlay.electronPath` → 环境变量 → 固定候选（`$DSH_HOME/electron/electron.exe`、`~/.dsh/electron/electron.exe`），不来自模型或网络 |
+| 脚本参数 | 模块自身目录下的 `overlay/main.cjs`，由 `join(HERE, ...)` 推导，外部不可替换 |
+| 用途 | 宿主不是窗口进程，覆盖层必须由一个独立 Electron 进程绘制全屏透明置顶窗（边缘光/提示条） |
+| 输出 | `stdio: 'ignore'`，不读取、不回传子进程输出 |
+| 生命周期 | `detached` + 父 pid 看门狗，宿主退出时随之退出；不下载外部程序、不提权 |
+
+仓库内其余 `.exec` 出现处均为正则匹配（`/^mcp__.*?__/`、`/:(\d+)/`），与命令执行无关。
+
+**网络与数据**：无遥测、无外部请求；HTTP 路由（`/screen-glow/settings`、`/screen-glow/preview`、`/screen-glow/hide`）只注册在宿主 webServer 的本机监听地址上，用于同源的设置页读写。覆盖层只读本地 `state.json`（布尔值 + 工具名 + 几个数字）。
+
 ## 隐私
 
 不联网、无遥测、不截图、不读屏幕内容。覆盖层只读一个本地 `state.json`（布尔值 + 工具名 + 几个数字）。
