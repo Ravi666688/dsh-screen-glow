@@ -125,3 +125,57 @@ npm view dsh-screen-glow version dist-tags
 - `~/.dsh/profiles/sgtest`：本次隔离安装验证产物，发布完成后删除
 - 插件目录里的 `dsh-screen-glow-0.5.0.tgz`：建议 `.gitignore` 忽略（构建产物）
 - `C:\Users\李振宇\dsh-plugin\previews\`：聊天用的原始大图，不进包、不进仓库（已 gitignore）
+
+---
+
+## 8. 已确认的决策（2026-11-03）
+
+| 问题 | 你的选择 |
+|---|---|
+| 发布轨道 | **GitHub 直装 + Release**（不发 npm） |
+| 仓库名 | `Ravi666688/dsh-screen-glow` |
+| Release 方式 | 不装 gh，手动发 |
+| 本机装配 | 保持 `link:` 开发态 |
+
+## 9. 网络约束（实测，2026-11-03 23:1x）
+
+| 端点 | 结果 |
+|---|---|
+| `github.com:443` | ✗ 连不上（`Could not connect to server`，21s 超时）→ **`git push` 不可用** |
+| `api.github.com` | ✓ 200 |
+| `uploads.github.com` | ✓ 302 |
+| `registry.npmjs.org` | ✓ 200 |
+| `objects.githubusercontent.com` | ✓ 可达 |
+
+**含义**：本机不能用 git 协议推送；但 GitHub **API 与 Release 附件上传域名是通的**，所以有三条可行路径。
+
+### 路径 A：API 发布（需要一次性 PAT）
+
+fine-grained token，只授权 `Ravi666688/dsh-screen-glow` 一个仓库、`Contents: write` + `Metadata: read`、有效期 1 天：
+
+1. `POST /user/repos` 建空仓库
+2. Git Data API 一次性写入 `main`（blob → tree → commit → ref）
+3. `POST /releases` 建 `v0.5.0`（GitHub 会自动建 tag）
+4. `POST uploads.github.com/.../assets?name=dsh-screen-glow-0.5.0.tgz` 传产物
+5. 用完立刻撤销 token
+
+### 路径 B：你在自己网络里推（无需 token）
+
+```bash
+cd C:\Users\李振宇\dsh-plugin\dsh-screen-glow
+git remote add origin https://github.com/Ravi666688/dsh-screen-glow.git
+git branch -M main && git push -u origin main
+git push origin v0.5.0
+```
+
+然后网页 Create release → 选 tag `v0.5.0` → 上传 `dsh-screen-glow-0.5.0.tgz` → 粘贴 `RELEASE_NOTES-v0.5.0.md`。
+
+### 路径 C：先发 npm（registry 通）
+
+`pnpm publish --access public --tag latest` 需要 npm token；GitHub 之后补。
+
+## 10. 当前卡点
+
+- GitHub 仓库**尚未创建**（API 查询 404），本地已配好远端与 tag `v0.5.0`
+- 本地 `git push` 因网络被拒（见第 9 节）
+- 已就绪产物：`dsh-screen-glow-0.5.0.tgz`、tag `v0.5.0`、`RELEASE_NOTES-v0.5.0.md`
