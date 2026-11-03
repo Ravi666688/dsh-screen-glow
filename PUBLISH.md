@@ -179,3 +179,16 @@ git push origin v0.5.0
 - GitHub 仓库**尚未创建**（API 查询 404），本地已配好远端与 tag `v0.5.0`
 - 本地 `git push` 因网络被拒（见第 9 节）
 - 已就绪产物：`dsh-screen-glow-0.5.0.tgz`、tag `v0.5.0`、`RELEASE_NOTES-v0.5.0.md`
+
+## 11. 选定路径：B（你手动推）
+
+已生成一键脚本 **`scripts/publish-github.cmd`**（双击即可）：
+
+1. 配置 remote → `Ravi666688/dsh-screen-glow`
+2. `git branch -M main` → `git push -u origin main`
+3. `git push origin v0.5.0`
+4. 失败时提示"先去网页建空仓库"，成功后打印 Release 操作步骤
+
+前置条件：先在 https://github.com/new 建空仓库 `Ravi666688/dsh-screen-glow`（Public，不勾任何初始化文件）。
+
+推送完成后，本机可用 `api.github.com`（可达）验证仓库/commit/tag/release/附件。
