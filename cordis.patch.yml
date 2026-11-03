@@ -1,0 +1,37 @@
+# dsh-screen-glow 的 bundle patch：把宿主半侧挂进 DSH 配置树
+#
+# 覆盖层（Electron 全屏透明窗）由宿主半侧在 apply() 里自己拉起，不需要额外配置行。
+# 想改默认参数就在下面加 config:（全部可选，缺省即推荐值）：
+#
+# - insert:
+#     - id: dsh-screen-glow
+#       name: 'dsh-screen-glow'
+#       config:
+#         enabled: true
+#         holdMs: 1600          # 一次操作结束后光再停留多久（毫秒）
+#         look:
+#           color: '#4da3ff'    # 主色（蓝色）
+#           thickness: 1        # 光带厚度倍率
+#           intensity: 0.9      # 整体亮度 0..1
+#           particles: 80       # 粒子上限
+#         trigger:              # 这些算「接管输入」，点亮
+#           - desktop_mouse
+#           - desktop_input
+#           - desktop_mouse_drag
+#           - desktop_window_activate
+#           - computer_
+#           - mouse_
+#           - keyboard_
+#           - bsk_
+#         extend:               # 这些只在已点亮时延长，不单独点亮
+#           - desktop_screenshot
+#           - desktop_perceive
+#           - desktop_vision
+#           - desktop_windows_list
+#           - desktop_window_info
+#         electronPath: ''      # 留空自动探测 ~/.dsh/electron/electron[.exe]
+#         dataDir: ''           # 留空 = $DSH_HOME/screen-glow
+
+- insert:
+    - id: dsh-screen-glow
+      name: 'dsh-screen-glow'

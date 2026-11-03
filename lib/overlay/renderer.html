@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>dsh-screen-glow</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: transparent;
+        cursor: default;
+        user-select: none;
+      }
+      /* 整个特效层：JS 每帧只改这一个 opacity（合成器属性，不触发重排/重绘） */
+      #stage {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0;
+        will-change: opacity;
+        contain: layout paint;
+      }
+      /* 边缘内辉光：四层 inset 阴影，由内向外渐隐（数值由 JS 按 look 生成一次） */
+      #glow {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+      /* 四角加亮，模拟光从角落渗进来 */
+      .corner {
+        position: absolute;
+        width: 46vmin;
+        height: 46vmin;
+        pointer-events: none;
+        mix-blend-mode: screen;
+        opacity: 0.85;
+      }
+      .corner.tl {
+        left: 0;
+        top: 0;
+        transform: translate(-22%, -22%);
+      }
+      .corner.tr {
+        right: 0;
+        top: 0;
+        transform: translate(22%, -22%);
+      }
+      .corner.bl {
+        left: 0;
+        bottom: 0;
+        transform: translate(-22%, 22%);
+      }
+      .corner.br {
+        right: 0;
+        bottom: 0;
+        transform: translate(22%, 22%);
+      }
+      /* 屏幕中上方的提示条 */
+      #banner {
+        position: absolute;
+        left: 50%;
+        top: 18%;
+        transform: translate(-50%, -8px) scale(0.98);
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        max-width: 78vw;
+        padding: 10px 20px 11px;
+        border-radius: 999px;
+        background: rgba(8, 12, 20, 0.66);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        box-shadow: 0 10px 34px rgba(0, 0, 0, 0.42), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+        backdrop-filter: blur(14px) saturate(150%);
+        -webkit-backdrop-filter: blur(14px) saturate(150%);
+        color: #eef4ff;
+        font-family: 'PingFang SC', 'Microsoft YaHei', 'Segoe UI', system-ui, sans-serif;
+        font-size: 15px;
+        line-height: 1.2;
+        letter-spacing: 0.3px;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 260ms ease, transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+        will-change: opacity, transform;
+      }
+      #banner.show {
+        opacity: 1;
+        transform: translate(-50%, 0) scale(1);
+      }
+      #banner #banner-session {
+        opacity: 0.55;
+        font-size: 0.9em;
+        margin-right: 8px;
+        padding-right: 9px;
+        border-right: 1px solid rgba(255, 255, 255, 0.16);
+      }
+      #banner #banner-session:empty {
+        display: none;
+      }
+      #banner #banner-action {
+        opacity: 0.62;
+        font-size: 0.92em;
+        padding-left: 9px;
+        margin-left: 2px;
+        border-left: 1px solid rgba(255, 255, 255, 0.18);
+      }
+      #banner #banner-action:empty {
+        display: none;
+      }
+      #banner .dot {
+        flex: none;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #4da3ff;
+        box-shadow: 0 0 10px #4da3ff;
+        animation: bannerPulse 1.8s ease-in-out infinite;
+      }
+      @keyframes bannerPulse {
+        0%, 100% { opacity: 0.45; transform: scale(0.85); }
+        50% { opacity: 1; transform: scale(1.1); }
+      }
+      #fx {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+      /* 顶部/底部极窄的一道光，让「边缘」更像物理发光而不是描边 */
+      .rail {
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 2px;
+        pointer-events: none;
+        mix-blend-mode: screen;
+      }
+      .rail.top {
+        top: 0;
+      }
+      .rail.bottom {
+        bottom: 0;
+      }
+      .rail.v {
+        top: 0;
+        bottom: 0;
+        height: auto;
+        width: 2px;
+      }
+      .rail.v.left {
+        left: 0;
+      }
+      .rail.v.right {
+        right: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="stage">
+      <div id="glow"></div>
+      <div class="corner tl"></div>
+      <div class="corner tr"></div>
+      <div class="corner bl"></div>
+      <div class="corner br"></div>
+      <div id="banner"><span class="dot"></span><span id="banner-session"></span><span id="banner-text"></span><span id="banner-action"></span></div>
+      <canvas id="fx"></canvas>
+    </div>
+    <script src="renderer.cjs"></script>
+  </body>
+</html>

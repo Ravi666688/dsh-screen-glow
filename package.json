@@ -1,0 +1,56 @@
+{
+  "name": "dsh-screen-glow",
+  "version": "0.5.0",
+  "description": "屏幕边缘光：模型接管鼠标键盘时主屏四边亮蓝光+粒子、问你问题时琥珀、等你批准时红色，并在屏幕中上方浮一行“正在做什么”；含设置页、看门狗与自检 CLI。",
+  "type": "module",
+  "main": "lib/index.js",
+  "icon": "icon.svg",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "cordis",
+    "overlay",
+    "edge-glow",
+    "particles",
+    "computer-use",
+    "electron",
+    "desktop"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "docs/screenshots",
+    "docs/ROADMAP-v0.3.md",
+    "icon.svg",
+    "cordis.patch.yml",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web"
+    },
+    "compatibility": {
+      "dshReleases": {
+        "0.2.1-rc.5": "compatible"
+      }
+    }
+  },
+  "bin": {
+    "dsh-screen-glow": "lib/cli.mjs"
+  }
+}
