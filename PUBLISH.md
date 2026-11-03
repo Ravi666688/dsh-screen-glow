@@ -192,3 +192,24 @@ git push origin v0.5.0
 前置条件：先在 https://github.com/new 建空仓库 `Ravi666688/dsh-screen-glow`（Public，不勾任何初始化文件）。
 
 推送完成后，本机可用 `api.github.com`（可达）验证仓库/commit/tag/release/附件。
+
+---
+
+## 12. 发布状态（2026-11-03 23:2x，已完成推送）
+
+| 检查项 | 结果 |
+|---|---|
+| GitHub 仓库 | ✅ 已创建（Public）`Ravi666688/dsh-screen-glow` |
+| `main` 分支 | ✅ 已推送到 `ebb478b`（含脚本、发布说明、决策记录） |
+| tag `v0.5.0` | ✅ 已推送，annotated tag → 指向 `main` head |
+| 语义闸门 | ✅ `v0.5.0` == `package.json` 的 `0.5.0`；无 prerelease 后缀 |
+| GitHub 直装消费端验证 | ✅ `dsh plugin --profile sgtest add github:Ravi666688/dsh-screen-glow` 成功（拉取 `codeload` 444 KiB），`--dump-config` 出现 `- id: dsh-screen-glow`，`lib/`、`docs/`、`LICENSE` 等文件齐全 |
+
+**网络备注**：本次推送前实测 `github.com:443` 曾超时 21s，重试后恢复；`api.github.com` 全程可达。若再次遇到 `Could not connect`，等网络恢复后重跑 `scripts/publish-github.cmd` 即可（远端与 tag 已存在时会提示 already up-to-date）。
+
+### 仍待完成
+
+- **GitHub Release**（网页创建）：tag 选 `v0.5.0`、标题 `dsh-screen-glow v0.5.0`、正文用 `RELEASE_NOTES-v0.5.0.md`、附件上传 `dsh-screen-glow-0.5.0.tgz`。
+  （Release 不是直装的前提——`dsh plugin add github:` 走默认分支 HEAD，已经可用了；Release 主要给版本化下载与索引站引用。）
+- **索引站提交**：dshplugin.store / awesome-dsh-plugin / dshbase（文案见第 4.4 节）。
+- `~/.dsh/profiles/sgtest`：验收用临时 profile，可删除。
