@@ -213,3 +213,23 @@ git push origin v0.5.0
   （Release 不是直装的前提——`dsh plugin add github:` 走默认分支 HEAD，已经可用了；Release 主要给版本化下载与索引站引用。）
 - **索引站提交**：dshplugin.store / awesome-dsh-plugin / dshbase（文案见第 4.4 节）。
 - `~/.dsh/profiles/sgtest`：验收用临时 profile，可删除。
+
+---
+
+## 13. 发布后验证（2026-11-03 23:5x，已 PASS）
+
+| 检查 | 结果 |
+|---|---|
+| Release 存在 | ✅ `releases` 返回 1 条 |
+| `tag_name` | ✅ `v0.5.0` |
+| 标题 | ✅ `dsh-screen-glow v0.5.0` |
+| `draft` / `prerelease` | ✅ `false` / `false` |
+| `latest` | ✅ `GET /releases/latest` → `v0.5.0` |
+| 正文 | ✅ 1582 字 |
+| 附件 | ✅ `dsh-screen-glow-0.5.0.tgz`，451,239 字节 |
+| 附件可下载 | ✅ `releases/download/v0.5.0/...tgz` → HTTP 200，451,239 字节 |
+| 附件完整性 | ✅ sha256 `1fb28b42…6fa61f` 与本地产物完全一致 |
+| Release 页 | https://github.com/Ravi666688/dsh-screen-glow/releases/tag/v0.5.0 |
+| 消费端安装（用下载下来的附件） | ✅ `dsh plugin --profile sgtest add file:...dl.tgz` → `--dump-config` 出现 `- id: dsh-screen-glow`；验证后 profile 已清理 |
+
+**结论：第 9 步（打包上架）完成。** 唯一残留：本地 `da05bb6`（发布说明文件）因网络抖动未能推送到 `main`，不影响已发布内容。
