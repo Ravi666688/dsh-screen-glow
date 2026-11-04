@@ -288,3 +288,12 @@ critical: 0   high: 0   medium: 4（require electron / node:fs / node:path）   
 1. 到官方 Discussions 发「插件兼容性报告」（dsh.so 有模板），声明 0.2.1-rc.5 实测通过 → 会被并入其版本兼容矩阵
 2. npm 发布（`registry.npmjs.org` 可达；需 npm token）→ 多一个安装渠道，dsh.so 的纯 npm 条目也认
 3. dshbase 提交
+
+### awesome-dsh-plugin PR（2026-11-05 00:1x）
+
+- PR：**#12083** https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/12083
+- 内容：仅 1 个文件 data/plugins/Ravi666688__dsh-screen-glow.yml（+6 / -0），mergeable
+- CI：check 处于 queued（首次贡献者通常需维护者 Approve and run workflows；正常排队，等即可）
+- 踩过的坑：GitHub 新建文件页会自动预填路径，重复输入会变成
+  data/plugins/Ravi666688__dsh-screen-glow.yml/data/plugins/...；
+  本次用 API 把 fork 的 main 回滚到上游（丢弃错误提交）后重建正确路径，diff 修复为 1 个文件。
