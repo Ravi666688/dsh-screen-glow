@@ -258,3 +258,26 @@ critical: 0   high: 0   medium: 4（require electron / node:fs / node:path）   
 ```
 
 **下一步**：用 0.5.1 的 main 重新提交 dsh.so。
+
+---
+
+## 15. 索引提交进度（2026-11-04 11:5x）
+
+| 渠道 | 状态 | 备注 |
+|---|---|---|
+| **DSH-Store**（issue #1743） | 预检通过，等人工复核 | 10:18 的重新预检 run `41759929336` 成功（artifact `plugin-submission-1743-41759929336`）；机器人不再追帖是它的策略 |
+| **dsh.so** | 已提交成功，等审核合入 | 提交时版本 0.5.2、warning 仅剩 1 条 `child_process`（说明已作为提交上下文贴上）；公开接口 `/artifact/@Ravi666688/dsh-screen-glow.json` 目前仍 404，属正常（审核后才出条目） |
+| **awesome-dsh-plugin** | 待提 PR（`2026-11-04 23:15` 后仓库满 24h） | YAML 全文见 `docs/NEXT-DAY-CHECKLIST.md` |
+| **dshbase** | 可选，未提交 | 走「实测验证 + 目录收录」 |
+
+### 版本与产物
+
+- 最新版本 **0.5.2**（main `bbd3b7f` 起），Release `v0.5.2` 已发布并标记 latest，附件 `dsh-screen-glow-0.5.2.tgz`（453,584 字节）
+- 历史：v0.5.0 → v0.5.1（去 kill/unlink）→ v0.5.2（裸 IP 改 localhost）
+- 本地静态扫描：`vet-gate` → `verdict: clean`、staticScore 74、critical 0 / high 0
+
+### 后续可加分动作（可选）
+
+1. 到官方 Discussions 发「插件兼容性报告」（dsh.so 有模板），声明 0.2.1-rc.5 实测通过 → 会被并入其版本兼容矩阵
+2. npm 发布（`registry.npmjs.org` 可达；需 npm token）→ 多一个安装渠道，dsh.so 的纯 npm 条目也认
+3. dshbase 提交
