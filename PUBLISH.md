@@ -276,6 +276,13 @@ critical: 0   high: 0   medium: 4（require electron / node:fs / node:path）   
 - 历史：v0.5.0 → v0.5.1（去 kill/unlink）→ v0.5.2（裸 IP 改 localhost）
 - 本地静态扫描：`vet-gate` → `verdict: clean`、staticScore 74、critical 0 / high 0
 
+### 兼容性实测报告（官方 Discussions）
+
+- 链接：https://github.com/deepseek-ai/deepseek-harness/discussions/12101
+- 内容：dsh `0.2.1-rc.5` + `dsh-screen-glow` 0.5.2，安装方式 `bundle add`，结果「通过」；
+  覆盖三态光、提示条动作文案、会话名、设置页预览、看门狗重拉（写 `shutdown.json` 后约 7 秒重拉）、`doctor` 11 项全绿；已知限制为主屏/UAC 覆盖不到。
+- 用途：dsh.so 会把这类报告并入其版本兼容矩阵，可作为「被验证」的证据引用。
+
 ### 后续可加分动作（可选）
 
 1. 到官方 Discussions 发「插件兼容性报告」（dsh.so 有模板），声明 0.2.1-rc.5 实测通过 → 会被并入其版本兼容矩阵
