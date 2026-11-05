@@ -297,3 +297,19 @@ critical: 0   high: 0   medium: 4（require electron / node:fs / node:path）   
 - 踩过的坑：GitHub 新建文件页会自动预填路径，重复输入会变成
   data/plugins/Ravi666688__dsh-screen-glow.yml/data/plugins/...；
   本次用 API 把 fork 的 main 回滚到上游（丢弃错误提交）后重建正确路径，diff 修复为 1 个文件。
+
+---
+
+## 16. 索引结果（2026-11-05 12:4x）
+
+| 渠道 | 结果 |
+|---|---|
+| **awesome-dsh-plugin** | ✅ **PR #12083 已合并**（maintainer kysly，2026-11-04T17:26Z，merge commit 999bf7f0）。CI 两项 Submission gate / check 均 success。上游已有 data/plugins/Ravi666688__dsh-screen-glow.yml（维护者补充了 "Desktop only / Electron 自动查找" 的说明）。README 列表待其部署后重新生成 |
+| **dsh.so** | ✅ **条目已出**：https://www.dsh.so/artifact/dsh-screen-glow/ · pkgVersion=0.5.2 · adge=warning · critical 0 / warning 1 / info 15 · 唯一 warning = lib/index.js:242（child_process）· scannedAt 2026-11-04T22:49Z。全量索引 plugins-index.json 尚未吸收（下次部署重建后出现） |
+| **DSH-Store** | ⏳ issue #1743 仍 open，4 条评论，维护者未回复；预检已通过（10:18 重跑 success） |
+| **官方 Discussions** | ✅ 兼容性实测报告已发：https://github.com/deepseek-ai/deepseek-harness/discussions/12101 |
+
+### 关于 dsh.so 的 warning 徽标
+
+- 结论：**Declared 收录成功**，但风险档是 warning（因 child_process 一条）。dsh.so 的「安装已验证市场」只收低风险条目，所以目前只进主目录，不进那个精选索引。
+- 可选动作：用 dsh.so 的「申诉扫描结果」通道，说明 child_process 为覆盖层功能的唯一实现方式、已有边界约束（无 shell、路径不来自模型输入、stdio 丢弃、随宿主退出），请求人工下调风险档。
