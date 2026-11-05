@@ -313,3 +313,13 @@ critical: 0   high: 0   medium: 4（require electron / node:fs / node:path）   
 
 - 结论：**Declared 收录成功**，但风险档是 warning（因 child_process 一条）。dsh.so 的「安装已验证市场」只收低风险条目，所以目前只进主目录，不进那个精选索引。
 - 可选动作：用 dsh.so 的「申诉扫描结果」通道，说明 child_process 为覆盖层功能的唯一实现方式、已有边界约束（无 shell、路径不来自模型输入、stdio 丢弃、随宿主退出），请求人工下调风险档。
+
+### dsh.so 申诉（2026-11-05 13:0x）
+
+- 反馈编号：**#01a1aa13-bf91-788e-a02f-6933f01f6a4b**
+- 提交渠道：dsh.so 反馈页 https://www.dsh.so/zh/feedback/
+- 申诉对象：`childProcess`（severity=warning, category=code-exec, `lib/index.js:242`）
+- 附带字段：plugin id `dsh-screen-glow`、commitSha `e9935bf4d5be5301d763dace88d51870434899e5`、scannerVersion `dsh-static:73b7d4a8`
+- 诉求：复核后降为 info 或进人工豁免名单，使风险档 medium → low；若不可降，请给出满足低风险档的改造要求
+- 影响面：不影响已收录状态（条目已存在），仅影响风险档与「安装已验证」精选市场资格
+- 观察点：dsh.so 每日北京时间 01:10 重扫；徽标变化看 https://www.dsh.so/artifact/@Ravi666688/dsh-screen-glow.json 的 `badge.level`
