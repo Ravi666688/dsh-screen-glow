@@ -323,3 +323,29 @@ critical: 0   high: 0   medium: 4（require electron / node:fs / node:path）   
 - 诉求：复核后降为 info 或进人工豁免名单，使风险档 medium → low；若不可降，请给出满足低风险档的改造要求
 - 影响面：不影响已收录状态（条目已存在），仅影响风险档与「安装已验证」精选市场资格
 - 观察点：dsh.so 每日北京时间 01:10 重扫；徽标变化看 https://www.dsh.so/artifact/@Ravi666688/dsh-screen-glow.json 的 `badge.level`
+
+
+---
+
+## 17. dsh.so 收录细节（2026-11-06 10:0x）
+
+从 `cdn.dsh.so/plugins-index.json` 抓到我们的条目（已可被搜索）：
+
+```json
+{"id":"dsh-screen-glow","name":"@Ravi666688/dsh-screen-glow",
+ "description":"为 DSH 加的屏幕边缘光：模型接管鼠标键盘时亮蓝光、提问时琥珀、等你批准时红色，并在屏幕中上方显示「正在做什么」。含设置页、看门狗与自检 CLI。",
+ "stars":0,"topics":["terminal"],
+ "install":"dsh plugin --profile web add github:Ravi666688/dsh-screen-glow",
+ "url":"https://www.dsh.so/artifact/dsh-screen-glow/",
+ "verification":{"level":3,"label":"L3 · Install spec"},
+ "security":{"status":"audited","riskLevel":"low"}}
+```
+
+| 字段 | 值 | 含义 |
+|---|---|---|
+| security.riskLevel | **low** | 站内风险档是 low（比详情页徽标 `warning` 更宽松：dsh 把「vet clean + 单条 dsh 启发式警告」归为低档） |
+| verification.level | **3**（L3 · Install spec） | 安装验证还没到 L4 沙盒安装 / L5 冒烟；这一步由 dsh.so 的验证批次决定，作者无法直接触发 |
+| 详情页徽标 | 仍 `warning` | 静态扫描记录里的 badge；scannedAt 仍是 `2026-11-04T22:49Z`（今日未重扫到新结果） |
+| 申诉 | 未见答复 | 反馈单 #01a1aa13 暂无回音，等人工处理 |
+
+**结论**：已被 dsh.so 收录并进入可搜索索引；风险档 low（精选市场的门槛是低风险，这一项已满足），只差 dsh.so 自己跑安装验证（L4/L5）。
